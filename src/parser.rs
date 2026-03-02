@@ -3,11 +3,28 @@ use crate::lexer::{Token, Op};
 #[derive(Debug)]
 pub enum Node {
     Number(i64),
+    Variable(String),
+    Assignment(String, Box<Node>),
     Operator(Op, Box<Node>, Box<Node>),
 }
 
-pub fn parse(tokens: &[Token], pos: &mut usize) -> Node {
-    parse_low(tokens, pos)
+pub fn parse(tokens: &[Token]) -> Node {
+    if tokens.len() > 1 {
+        match tokens[1] {
+            Token::Assignment => {
+                match &tokens[0] {
+                    Token::Variable(var) => {
+                        Node::Assignment(var.clone(), Box::new(parse_low(tokens, &mut 2)))
+                    },
+                    _ => todo!()
+                }
+            },
+            _ => parse_low(tokens, &mut 0)
+        }
+    } else {
+        parse_low(tokens, &mut 0)
+    }
+
 }
 
 fn parse_low(tokens: &[Token], pos: &mut usize) -> Node {
@@ -34,7 +51,7 @@ fn parse_low(tokens: &[Token], pos: &mut usize) -> Node {
 
 fn parse_high(tokens: &[Token], pos: &mut usize) -> Node {
     
-    let mut left: Node = parse_number(tokens, pos);
+    let mut left: Node = parse_number_or_variable(tokens, pos);
 
     loop {
         if *pos >= tokens.len() { break; }
@@ -44,7 +61,7 @@ fn parse_high(tokens: &[Token], pos: &mut usize) -> Node {
         match op {
             Op::Multiply | Op::Divide => {
                 *pos += 1;
-                let right: Node = parse_number(tokens, pos);
+                let right: Node = parse_number_or_variable(tokens, pos);
                 left = Node::Operator(op, Box::new(left), Box::new(right));
             },
             _ => break
@@ -54,12 +71,16 @@ fn parse_high(tokens: &[Token], pos: &mut usize) -> Node {
     left
 }
 
-fn parse_number(tokens: &[Token], pos: &mut usize) -> Node {
+fn parse_number_or_variable(tokens: &[Token], pos: &mut usize) -> Node {
     
-    match tokens[*pos] {
+    match &tokens[*pos] {
         Token::Number(num) => {
             *pos += 1;
-            Node::Number(num)
+            Node::Number(*num)
+        },
+        Token::Variable(var) => {
+            *pos += 1;
+            Node::Variable(var.clone())
         },
         _ => todo!()
     }

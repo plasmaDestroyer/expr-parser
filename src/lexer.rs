@@ -13,23 +13,32 @@ pub enum Op {
 }
 pub fn lex(input: &str) -> Vec<Token> {
 
-    let expression: Vec<&str> = input.split_whitespace().collect();
+    let expression = input.chars().peekable();
     let mut tokens: Vec<Token> = vec![];
 
     println!("Tokens: {:?}", expression);
+    let mut num: String = String::new();
 
-    for token in expression {
-        if let Ok(num) = token.parse::<i64>() {
-            tokens.push(Token::Number(num));
+    for c in expression {
+        if c.is_whitespace() { 
+            continue;
+        } else if c.is_digit(10) {
+            num.push_str(&c.to_string());
         } else {
-            match token {
-                "+" => tokens.push(Token::Operator(Op::Plus)),
-                "-" => tokens.push(Token::Operator(Op::Minus)),
-                "*" => tokens.push(Token::Operator(Op::Multiply)),
-                "/" => tokens.push(Token::Operator(Op::Divide)),
+            tokens.push(Token::Number(num.parse::<i64>().expect("Error while parsing number in lexer!")));
+            num = String::new();
+            match c {
+                '+' => tokens.push(Token::Operator(Op::Plus)),
+                '-' => tokens.push(Token::Operator(Op::Minus)),
+                '*' => tokens.push(Token::Operator(Op::Multiply)),
+                '/' => tokens.push(Token::Operator(Op::Divide)),
                 _ => (),
             }
         }
+    }
+
+    if !num.is_empty() {
+            tokens.push(Token::Number(num.parse::<i64>().expect("Error while parsing number in lexer!")));
     }
 
     tokens

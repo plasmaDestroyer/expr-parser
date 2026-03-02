@@ -25,7 +25,7 @@ fn main() {
 
         match input {
             "exit" => {
-                println!("Exiting program.\n");
+                println!("\nExiting program!");
                 break;
             }
             _ => {

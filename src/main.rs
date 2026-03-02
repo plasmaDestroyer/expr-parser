@@ -5,20 +5,44 @@ mod eval;
 use lexer::lex;
 use parser::parse;
 use eval::evaluate;
+use std::io::{self, Write};
 
 fn main() {
 
-    let input: &str = "10 + 20 * 2";
+    // let input: &str = "10 + 20 * 2";
 
-    let tokens = lex(input);
+    loop {
+        println!("Enter an expression to evaluate: (type \'exit\' to quit)");
+        print!("> ");
+        io::stdout().flush().unwrap();
 
-    println!("Tokens: {:?}", tokens);
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
 
-    let root = parse(&tokens, &mut 0);
+        let input = input.trim();
 
-    println!("Tree: {:?}", root);
+        match input {
+            "exit" => {
+                println!("Exiting program.\n");
+                break;
+            }
+            _ => {
 
-    let res: i64 = evaluate(root);
+                let tokens = lex(&input);
+            
+                println!("Tokens: {:?}", tokens);
+            
+                let root = parse(&tokens, &mut 0);
+            
+                println!("Tree: {:?}", root);
+            
+                let res: i64 = evaluate(root);
+            
+                println!("Answer: {:?} \n", res);
 
-    println!("Answer: {:?}", res);
+            }
+        }
+    }
 }

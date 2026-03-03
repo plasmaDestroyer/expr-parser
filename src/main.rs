@@ -22,13 +22,13 @@ fn main() {
         let mut input = String::new();
         io::stdin()
             .read_line(&mut input)
-            .expect("Failed to read line");
+            .expect("Failed to read line\n");
 
         let input = input.trim();
 
         match input {
             "exit" => {
-                println!("\nExiting program!");
+                println!("Exiting program!\n");
                 break;
             }
             _ => {
@@ -36,15 +36,15 @@ fn main() {
                 match lex(&input) {
                     Ok(tokens) => {
 
-                        println!("Tokens: {:?}", tokens);
+                        // println!("Tokens: {:?}", tokens);
                     
                         match parse(&tokens) {
                             Ok(root) => {
                             
-                                println!("Tree: {:?}", root);
+                                // println!("Tree: {:?}", root);
                             
                                 match evaluate(root, &mut vars) {
-                                    Ok(res) => println!("Answer: {:?} \n", res),
+                                    Ok(res) => println!("{:?}\n", res),
                                     Err(err) => println!("{}\n", err)
                                 }
                             },

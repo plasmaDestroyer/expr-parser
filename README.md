@@ -3,7 +3,6 @@
 An expression parser and evaluator with variable support, built from scratch in Rust.
 
 ## Architecture
-
 ```
 Input → Lexer → [Tokens] → Parser → AST → Evaluator → Result
 ```
@@ -15,162 +14,46 @@ Input → Lexer → [Tokens] → Parser → AST → Evaluator → Result
 | Evaluator | Tree-walking evaluator with a variable store (`HashMap`)         |
 
 ## Features
-
 | Feature              | Description                                          |
 | -------------------- | ---------------------------------------------------- |
 | Basic math           | `+`, `-`, `*`, `/` operations                        |
 | Operator precedence  | `*` and `/` bind tighter than `+` and `-`            |
 | Variables            | Assign with `x = 10`, use in expressions like `x + 5`|
 | REPL                 | Interactive read-eval-print loop                     |
-| Error handling       | Graceful `Result`-based error propagation             |
+| Error handling       | Graceful `Result`-based error propagation            |
 
 ## Usage
-
 ### Building
-
 ```
 cargo build
 ```
 
 ### Running
-
 ```
 cargo run
 ```
 
 ## Example
-
 ```
 Enter an expression to evaluate: (type 'exit' to quit)
 > x = 10
-Answer: 10
+10
 
-Enter an expression to evaluate: (type 'exit' to quit)
 > y = 20
-Answer: 20
+20
 
-Enter an expression to evaluate: (type 'exit' to quit)
 > x + y * 2
-Answer: 50
+50
 
-Enter an expression to evaluate: (type 'exit' to quit)
 > z = x * y + 5
-Answer: 205
+205
 
-Enter an expression to evaluate: (type 'exit' to quit)
 > exit
-
 Exiting program!
 ```
 
 ## Error Handling
-
 All errors are handled gracefully using Rust's `Result` type — division by zero, unknown characters, and undefined variables return descriptive error messages without crashing the REPL.
-
-```
-> 10 / 0
-Division by Zero not allowed!
-
-> x.y
-Unknown Character: .
-
-> unknown_var + 1
-Undefined Variable!
-```
-# Expression Parser
-
-An expression parser and evaluator with variable support, built from scratch in Rust.
-## Architecture
-
-```
-
-Input → Lexer → [Tokens] → Parser → AST → Evaluator → Result
-
-```
-
-| Stage | Description |
-
-| --------- | ---------------------------------------------------------------- |
-
-| Lexer | Char-by-char tokenization into numbers, operators, and variables |
-
-| Parser | Recursive descent parser that builds an AST with precedence |
-
-| Evaluator | Tree-walking evaluator with a variable store (`HashMap`) |
-
-## Features
-
-| Feature | Description |
-
-| -------------------- | ---------------------------------------------------- |
-
-| Basic math | `+`, `-`, `*`, `/` operations |
-
-| Operator precedence | `*` and `/` bind tighter than `+` and `-` |
-
-| Variables | Assign with `x = 10`, use in expressions like `x + 5`|
-
-| REPL | Interactive read-eval-print loop |
-
-| Error handling | Graceful `Result`-based error propagation | 
-
-## Usage
-
-### Building 
-
-```
-cargo build
-```
-
-### Running
-
-```
-cargo run
-```
-
-## Example
-
-```
-Enter an expression to evaluate: (type 'exit' to quit)
-
-> x = 10
-
-Answer: 10
-
-
-Enter an expression to evaluate: (type 'exit' to quit)
-
-> y = 20
-
-Answer: 20
-
-
-Enter an expression to evaluate: (type 'exit' to quit)
-
-> x + y * 2
-
-Answer: 50
-
-
-Enter an expression to evaluate: (type 'exit' to quit)
-
-> z = x * y + 5
-
-Answer: 205
-
-
-Enter an expression to evaluate: (type 'exit' to quit)
-
-> exit
-
-Exiting program!
-```
-
-
-## Error Handling
-
-All errors are handled gracefully using Rust's `Result` type — division by zero, unknown characters, and undefined variables return descriptive error messages without crashing the REPL.
-
 ```
 > 10 / 0
 Division by Zero not allowed!

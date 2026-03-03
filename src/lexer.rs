@@ -14,7 +14,7 @@ pub enum Op {
     Divide,
 }
 
-pub fn lex(input: &str) -> Vec<Token> {
+pub fn lex(input: &str) -> Result<Vec<Token>, String> {
 
     let mut expression = input.chars().peekable();
     let mut tokens: Vec<Token> = vec![];
@@ -33,7 +33,7 @@ pub fn lex(input: &str) -> Vec<Token> {
                 num.push(expression.next().expect("Error while lexing number!"));
             }
 
-            tokens.push(Token::Number(num.parse::<i64>().expect("Error while parsing number in lexer!")));
+            tokens.push(Token::Number(num.parse::<i64>().map_err(|e| format!("Failed to parse number: {:?}", e))?));
 
         } else if c.is_alphabetic() {
 
@@ -53,10 +53,10 @@ pub fn lex(input: &str) -> Vec<Token> {
                 '*' => tokens.push(Token::Operator(Op::Multiply)),
                 '/' => tokens.push(Token::Operator(Op::Divide)),
                 '=' => tokens.push(Token::Assignment),
-                _ => (),
+                _ => return Err(format!("Unknown Character: {c}"))
             }
         }
     }
 
-    tokens
+    Ok(tokens)
 }

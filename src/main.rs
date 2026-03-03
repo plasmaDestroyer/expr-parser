@@ -33,18 +33,27 @@ fn main() {
             }
             _ => {
 
-                let tokens = lex(&input);
-            
-                println!("Tokens: {:?}", tokens);
-            
-                let root = parse(&tokens);
-            
-                println!("Tree: {:?}", root);
-            
-                let res: i64 = evaluate(root, &mut vars);
-            
-                println!("Answer: {:?} \n", res);
+                match lex(&input) {
+                    Ok(tokens) => {
 
+                        println!("Tokens: {:?}", tokens);
+                    
+                        match parse(&tokens) {
+                            Ok(root) => {
+                            
+                                println!("Tree: {:?}", root);
+                            
+                                match evaluate(root, &mut vars) {
+                                    Ok(res) => println!("Answer: {:?} \n", res),
+                                    Err(err) => println!("{}\n", err)
+                                }
+                            },
+                            Err(err) => println!("{}\n", err)
+                        }
+
+                    },
+                    Err(err) => println!("{}\n", err)
+                }
             }
         }
     }
